@@ -10,19 +10,18 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)// 스프링부트테스트와 junit 사이에 낑기는 애노테이션
+@ExtendWith(SpringExtension.class)// 스프링부트테스트와 junit을 이어주고
 @WebMvcTest(controllers = HelloController.class,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)}
 ) // 난 컨트롤러를 테스트 할거야
 public class HelloControllerTest {
-    @Autowired // 스프링 빈을 주입받고
-    private MockMvc mvc; // api 테스트용 변수 선언
+    @Autowired
+    private MockMvc mvc; // api 테스트용으로 모킹변수 선언, Autowired를 통해 자동 주입받음.
 
     @WithMockUser(roles = "USER")
     @Test

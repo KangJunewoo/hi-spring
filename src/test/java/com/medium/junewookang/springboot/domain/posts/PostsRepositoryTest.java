@@ -14,14 +14,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+/**
+ * PostsRepository에서 JPA를 사용했기 때문에, 선언을 아무것도 안했지만
+ * deleteAll, save, findAll 등의 메소드가 자동으로 지원되는 것을 확인할 수 있음.
+ */
+@ExtendWith(SpringExtension.class) // HelloControllerTest에서 봤었지? junit을 스프링용으로 확장해주고
+@SpringBootTest // h2 db를 실행해줌.
 public class PostsRepositoryTest {
 
-    @Autowired
+    @Autowired // 키야 자동주입
     PostsRepository postsRepository;
 
-    @AfterEach
+    @AfterEach // 각각의 테스트가 끝난 후 삭제 수행
     public void cleanup(){
         postsRepository.deleteAll();
     }
@@ -31,14 +35,14 @@ public class PostsRepositoryTest {
         String title = "테스트게시글";
         String content = "테스트본문";
 
-        postsRepository.save(Posts.builder()
+        postsRepository.save(Posts.builder() // id값이 있다면 update, 없다면 insert가 수행됨.
             .title(title)
             .content(content)
             .author("test@email.com")
             .build());
 
         List<Posts> postsList = postsRepository.findAll();
-        Posts posts = postsList.get(0);
+        Posts posts = postsList.get(0); // 첫번째거 가져오기
         assertThat(posts.getTitle()).isEqualTo(title);
         assertThat(posts.getContent()).isEqualTo(content);
 

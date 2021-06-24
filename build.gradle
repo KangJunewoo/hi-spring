@@ -1,3 +1,4 @@
+// 원래같았음 start.spring.io에서 설정되었을 코드들.
 plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
@@ -6,7 +7,7 @@ plugins {
 
 
 group 'com.medium.junewookang'
-version '1.0.4-SNAPSHOT-' + new Date().format("yyyyMMddHHmmss")
+version '1xff.0.4-SNAPSHOT-' + new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = 1.8
 
 repositories {

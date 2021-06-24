@@ -14,6 +14,6 @@ public class HelloController {
 
     @GetMapping("/hello/dto")
     public HelloResponseDto helloDto(@RequestParam("name") String name, @RequestParam("amount") int amount){
-        return new HelloResponseDto(name, amount); // 요청을 받으면 그걸로 새 객체를 만드는거구나.
+        return new HelloResponseDto(name, amount); // 요청받으면 쿼리스트링 두개로 새로운 객체 생성
     }
 }

@@ -1,56 +1,75 @@
 # hi-spring
-스프링 뿌셔
+
+이동욱님 교재로 따라치며 배우는 스프링 입문  
+[저자 레포지토리](https://github.com/jojoldu/freelec-springboot2-webservice)
+/ [교재 링크 ](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=218568947)
 
 ## 3~6장 프로젝트
+
 * CRUD 가능한 게시판
 * 소셜로그인 가능
 * 로그인 여부 / 글 작성 여부에 따른 서로 다른 권한 부여
 
-## 추후 복습할 내용
-* 어노테이션이 무지하게 많이 나온다. 롬복부터 springboot, jpa 관련까지 꼭 정리하고 넘어가야겠다.
+## Spring 웹 계층
 
-## shell script
-```shell
-REPOSITORY=/home/ec2-user/app/step1
-PROJECT_NAME=hi-spring
+![Spring 웹 계층](https://blog.kakaocdn.net/dn/bFruEV/btqAUv4HJLQ/H5TVBjqkKc5KBgD4Vdyvkk/img.png)
 
-cd $REPOSITORY/$PROJECT_NAME/
+- Web Layer : 컨트롤러, 뷰템플릿 영역
+- Service Layer : 트랜잭션, 도메인 간 순서 보장의 역할. @Service, @Transactional 사용됨.
+- Repository Layer : DB에 접근. 기존의 DAO
+- DTO : 계층 간 데이터 교환을 위한 객체. 뷰 템플릿으로 넘기는 값이나, Repository Layer에서 넘겨주는 거.
+- Domain : 비즈니스 로직 그 자체.
 
-echo "> Git Pull"
+```java
+class ServiceTest {
+    /**
+     * 모든 로직이 서비스클래스 내부에서 처리됨.
+     * 즉 서비스계층이 무의미하며, 객체는 단순히 데이터 덩어리 역할만 하게됨.
+     */
+    @Transactional
+    public Order cancelOrderTransactionalScript(int orderId) {
+        // DB에서 주문, 결제, 배송정보 조회
+        OrdersDto order = ordersDao.selectOrders(orderId);
+        BillingDto billing = billingDao.selectBilling(orderId);
+        DeliveryDto delivery = deliveryDao.selectDelivery(orderId);
 
-git pull
+        // 배송취소 로직
+        String deliveryStatus = delivery.getStatus();
 
-echo "> 프로젝트 Build tlwkr"
+        if ("IN_PROGRESS".equals(deliveryStatus)) {
+            delivery.setStatus("CANCEL");
+            deliveryDao.update(delivery);
+        }
 
-./gradlew build
+        // 각 테이블에 반영
+        order.setStatus("CANCEL");
+        ordersDao.update(order);
 
-echo "> step1 디렉토리로 이동"
+        billing.setStatus("CANCEL");
+        deliveryDao.update(billing);
 
-cd $REPOSITORY
+        return order;
 
-echo "> Build 파일 복사"
+    }
 
-cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
+    /**
+     * 각각의 도메인이 각자 본인의 취소 입네트 처리를 하며,
+     * 서비스 메소드는 트랜잭션, 도메인의 순서만 보장해줌.
+     */
+    @Transactional
+    public Order cancelOrderDDD(int orderId) {
+        // 조회하는건 똑같은데
+        Orders order = ordersRepository.findById(orderId);
+        Billing billing = billingRepository.findByOrderId(orderId);
+        Delivery delivery = deliveryRepository.findByOrderId(orderId);
 
-echo "> 현재 구동중인 애플리케이션 pid 확인"
-
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
-
-echo "현재 구동 중인 애플리케이션 pid: $CURRENT_PID"
-
-if [ -z "$CURRENT_PID" ]; then
-        echo "> 현재 구동 중인 애플리케이션이 없으므로 종료하지 않습니다."
-else
-        echo "> kill -15 $CURRENT_PID"
-        kill -15 $CURRENT_PID
-        sleep 5
-fi
-
-echo "> 새 애플리케이션 배포"
-
-JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
-
-echo "> JAR Name: $JAR_NAME"
-
-nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
+        // 각 도메인에 있는 cancel을 적용함.
+        delivery.cancel();
+        order.cancel();
+        billing.cancel();
+        
+        return order;
+    }
+}
 ```
+

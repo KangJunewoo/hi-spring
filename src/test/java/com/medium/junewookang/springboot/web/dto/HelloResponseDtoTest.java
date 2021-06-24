@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HelloResponseDtoTest {
     @Test
-    public void testLombok(){
+    public void testLombok(){ // 롬복의 Getter, RequiredArgsConstructor가 진짜 잘 작동하는지 알아보기 위함.
         String name = "test";
         int amount = 1000;
 
