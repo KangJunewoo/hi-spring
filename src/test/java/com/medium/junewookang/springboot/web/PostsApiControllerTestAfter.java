@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,9 +31,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// 인증 도입 후 코드
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostsApiControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // JPA까지 사용해야 하므로 @WebMvcTest 대신 @SpringBootTest 사용함.
+public class PostsApiControllerTestAfter {
 
     // 인증쪽 테스트를 위해 추가함.
     @Autowired
@@ -54,7 +58,7 @@ public class PostsApiControllerTest {
     @Autowired
     private PostsRepository postsRepository;
 
-    @AfterEach
+    @AfterEach // 테스트 하나 끝날때마다 삭제해버리기
     public void tearDown() throws Exception {
         postsRepository.deleteAll();
     }
@@ -62,6 +66,7 @@ public class PostsApiControllerTest {
     @Test
     @WithMockUser(roles="USER")
     public void Posts_등록된다() throws Exception {
+        // given
         String title = "title";
         String content = "content";
         PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
@@ -74,8 +79,7 @@ public class PostsApiControllerTest {
 
         // when
         mvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(new ObjectMapper().writeValueAsString(requestDto))
+                .content(new ObjectMapper().writeValueAsString(requestDto)) // 이제 utf-8 설정 알아서 해준다고 deprecated 되길래 뺐음.
         ).andExpect(status().isOk());
 
         // then
@@ -103,7 +107,6 @@ public class PostsApiControllerTest {
 
         // when
         mvc.perform(put(url)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(new ObjectMapper().writeValueAsString(requestDto))
         ).andExpect(status().isOk());
 

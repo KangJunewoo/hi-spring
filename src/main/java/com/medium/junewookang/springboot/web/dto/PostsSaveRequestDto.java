@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor // Builder를 사용하기 위해선 NoArgsConstructor가 있어야하나보다. 생각해보니 그러네 ㅇㅇ.
 public class PostsSaveRequestDto {
     private String title;
     private String content;

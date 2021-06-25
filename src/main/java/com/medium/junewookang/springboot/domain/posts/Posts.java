@@ -10,12 +10,12 @@ import javax.persistence.*;
 /**
  * 엔티티 클래스에선 절대!!! Setter를 만들지 않는다!!!
  * 웬만하면 생성자를 통해 값 확정짓고
- * 값을 변경하고 싶으면 public 메소드 활용해야함.
+ * 값을 변경하고 싶으면 명시적인 public 메소드 활용해야함. (여기서는 update 메소드가 그 예)
  */
 @Getter // 롬복 - 알지?
 @NoArgsConstructor // 롬복 - 인자 없는 생성자 생성
 @Entity // JPA - 이 클래스는 테이블이다.
-public class Posts extends BaseTimeEntity { // TODO : BaseTimeEntity?
+public class Posts extends BaseTimeEntity { // 아래 필드 + BaseTimeEntity의 createdDate, modifiedDate를 필드로 넣을 것이다.
 
     @Id // JPA - 이 필드는 PK이다.
     @GeneratedValue(strategy = GenerationType.IDENTITY) // JPA - PK의 생성 규칙을 정의할건데, auto_increment로 설정하겠다.
@@ -36,7 +36,7 @@ public class Posts extends BaseTimeEntity { // TODO : BaseTimeEntity?
         this.author = author;
     }
 
-    public void update(String title, String content){
+    public void update(String title, String content){ // 의외로 service가 아닌 domain 설정 시 update가 들어감. 순수하게 '~~할 수 있어야 한다' 의 기능을 도메인에 넣나봄.
         this.title = title;
         this.content = content;
     }

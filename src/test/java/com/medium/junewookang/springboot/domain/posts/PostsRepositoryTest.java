@@ -51,8 +51,8 @@ public class PostsRepositoryTest {
     @Test
     public void BaseTimeEntity_등록(){
         //given
-        LocalDateTime now = LocalDateTime.of(2019, 6, 4, 0,0,0);
-        postsRepository.save(Posts.builder().title("title").content("content").author("author").build());
+        LocalDateTime now = LocalDateTime.of(2019, 6, 4, 0,0,0); // 머나먼 옛날
+        postsRepository.save(Posts.builder().title("title").content("content").author("author").build()); // 최신
 
         //when
         List<Posts> postsList = postsRepository.findAll();
@@ -62,7 +62,7 @@ public class PostsRepositoryTest {
 
         System.out.println(">>>>>>>>> createDate=" + posts.getCreatedDate() + ", modifiedDate=" + posts.getModifiedDate());
 
-        assertThat(posts.getCreatedDate()).isAfter(now);
+        assertThat(posts.getCreatedDate()).isAfter(now); // 머나먼 옛날 < 최신
         assertThat(posts.getModifiedDate()).isAfter(now);
     }
 

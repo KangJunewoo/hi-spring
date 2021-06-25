@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
-@RestController
+/**
+ * Controller 진짜 별거없음. 그냥 요청받으면 Dto 만들어서 Service 계층 호출.
+ */
+@RequiredArgsConstructor // Lombok - final 선언이 붙은것만.. 알지? -> 코드 변경시 생성자 변경부담 줄여줌.
+@RestController // Spring - 이 클래스는 컨트롤러인데, Restful하게 동작해!
 public class PostsApiController {
     private final PostsService postsService;
 

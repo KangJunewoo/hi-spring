@@ -13,11 +13,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class IndexControllerTest {
-    @Autowired
+    @Autowired // 테스트할땐 보통 생성자 대신 Autowired로 주입받나보다.
     private TestRestTemplate restTemplate;
 
     @Test
-    public void 메인페이지_로딩(){
+    public void 메인페이지_로딩(){ // HTML 잘 보여주는지 테스트.
         //when
         String body = this.restTemplate.getForObject("/", String.class);
 
