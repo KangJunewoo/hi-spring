@@ -11,8 +11,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    // 직접 정의한 @LoginUser의 설정파일을
     private final LoginUserArgumentResolver loginUserArgumentResolver;
 
+    // 스프링에 반영!
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
         argumentResolvers.add(loginUserArgumentResolver);

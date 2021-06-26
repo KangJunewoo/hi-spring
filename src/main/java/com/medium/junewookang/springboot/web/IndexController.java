@@ -1,5 +1,6 @@
 package com.medium.junewookang.springboot.web;
 
+import com.medium.junewookang.springboot.config.auth.LoginUser;
 import com.medium.junewookang.springboot.config.auth.dto.SessionUser;
 import com.medium.junewookang.springboot.service.posts.PostsService;
 import com.medium.junewookang.springboot.web.dto.PostsResponseDto;
@@ -17,12 +18,10 @@ public class IndexController {
 
     // 생성자를 통해 주입받기 때문에 @Autowired 안걸어줘도 되나봄.
     private final PostsService postsService;
-    private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model){
+    public String index(Model model, @LoginUser SessionUser user){ // 어노테이션으로 자동 주입!
         model.addAttribute("posts", postsService.findAllDesc()); // 결국 컨트롤러에서 부르는 건 서비스 메소드.
-        SessionUser user = (SessionUser) httpSession.getAttribute("user"); // 세션에 저장된 유저가 있다면, 이름을 넘겨줌.
         if(user != null){
             model.addAttribute("userName", user.getName());
         }
