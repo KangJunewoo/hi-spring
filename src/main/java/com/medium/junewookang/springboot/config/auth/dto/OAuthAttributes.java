@@ -7,8 +7,9 @@ import lombok.Getter;
 
 import java.util.Map;
 
+
 @Getter
-public class OAuthAttributes { // 이 또한 나중에 복습 고.
+public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
     private String name;
@@ -16,7 +17,7 @@ public class OAuthAttributes { // 이 또한 나중에 복습 고.
     private String picture;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email, String picture){
+    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email, String picture) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
@@ -24,27 +25,14 @@ public class OAuthAttributes { // 이 또한 나중에 복습 고.
         this.picture = picture;
     }
 
-    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes){
-        if("naver".equals(registrationId)){
-            return ofNaver("id", attributes);
-        }
 
+    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        // registrationId 떨구는 용인가보네 ㅋㅋㅋㅋㅋ
         return ofGoogle(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>)attributes.get("response");
-
-        return OAuthAttributes.builder()
-                .name((String) response.get("name"))
-                .email((String) response.get("email"))
-                .picture((String) response.get("profile_image"))
-                .attributes(response)
-                .nameAttributeKey(userNameAttributeName)
-                .build();
-    }
-
-    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes){
+    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        // 사실 of는 결국 정보들 가지고 OAuthAttribute 만드는거에 불과했음.
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -54,7 +42,7 @@ public class OAuthAttributes { // 이 또한 나중에 복습 고.
                 .build();
     }
 
-    public User toEntity(){
+    public User toEntity() {
         return User.builder()
                 .name(name)
                 .email(email)

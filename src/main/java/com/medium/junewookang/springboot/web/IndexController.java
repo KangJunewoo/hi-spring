@@ -22,7 +22,7 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("posts", postsService.findAllDesc()); // 결국 컨트롤러에서 부르는 건 서비스 메소드.
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        SessionUser user = (SessionUser) httpSession.getAttribute("user"); // 세션에 저장된 유저가 있다면, 이름을 넘겨줌.
         if(user != null){
             model.addAttribute("userName", user.getName());
         }

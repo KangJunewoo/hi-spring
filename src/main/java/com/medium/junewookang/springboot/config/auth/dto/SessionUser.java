@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.io.Serializable;
 
 @Getter
-public class SessionUser implements Serializable {
+public class SessionUser implements Serializable { // 실제 사용되는 사용자 정보 3개
     private String name;
     private String email;
     private String picture;
